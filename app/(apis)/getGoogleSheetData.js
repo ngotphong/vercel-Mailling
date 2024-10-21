@@ -1,4 +1,4 @@
-const { google } = require("googleapis");
+import { google } from "googleapis";
 
 function extractSheetId(url) {
 	const regex = /spreadsheets\/d\/([a-zA-Z0-9-_]+)/;

@@ -1,6 +1,6 @@
-const { google } = require("googleapis");
-const fs = require("fs");
-const cheerio = require("cheerio");
+import cheerio from "cheerio";
+import fs from "fs";
+import { google } from "googleapis";
 
 function extractDocId(url) {
 	const regex = /document\/d\/([a-zA-Z0-9-_]+)/;
