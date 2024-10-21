@@ -1,5 +1,9 @@
-import GoogleIntegrationForm from "./screens/form";
+import InputForm from "./screens/inputForm/inputForm";
 
 export default function Home() {
-	return <GoogleIntegrationForm />;
+	return (
+		<>
+			<InputForm />
+		</>
+	);
 }

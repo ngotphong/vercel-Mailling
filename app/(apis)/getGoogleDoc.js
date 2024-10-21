@@ -18,7 +18,7 @@ function disableBodyStyling(htmlContent) {
 async function downloadGoogleDocAsHTML(docUrl, file = false) {
 	const auth = new google.auth.GoogleAuth({
 		credentials: {
-			private_key: process.env.SA_PRIVATE_KEY.replace(/\\n/g, "\n"),
+			private_key: process.env.atob(SA_PRIVATE_KEY),
 			client_email: process.env.SA_CLIENT_EMAIL,
 		},
 		scopes: ["https://www.googleapis.com/auth/drive.readonly"],
@@ -76,33 +76,33 @@ module.exports = {
 	replacePlaceholders,
 };
 
-// Example usage
-downloadGoogleDocAsHTML(
-	"https://docs.google.com/document/d/1D0bZ22qu7qxx6pnXq5bPBhRLKHkdOsPnTP2ziDF_J74/edit?usp=sharing",
-	true
-)
-	.then((html) => {
-		const placeholders = getPlaceholders(html);
-		console.log("Placeholders found:", placeholders);
+// // Example usage
+// downloadGoogleDocAsHTML(
+// 	"https://docs.google.com/document/d/1D0bZ22qu7qxx6pnXq5bPBhRLKHkdOsPnTP2ziDF_J74/edit?usp=sharing",
+// 	true
+// )
+// 	.then((html) => {
+// 		const placeholders = getPlaceholders(html);
+// 		console.log("Placeholders found:", placeholders);
 
-		const object = {
-			Tên: "John Doe",
-			"Lớp (vd: 10B4)": "8a2",
-			"SĐT (không bắt buộc)": "2024-10-21",
-			"Quầy (loại vé)": "Hắc (6-7-8)",
-		};
+// 		const object = {
+// 			Tên: "John Doe",
+// 			"Lớp (vd: 10B4)": "8a2",
+// 			"SĐT (không bắt buộc)": "2024-10-21",
+// 			"Quầy (loại vé)": "Hắc (6-7-8)",
+// 		};
 
-		const data = replacePlaceholders(html, object);
+// 		const data = replacePlaceholders(html, object);
 
-		// Write the replaced HTML to a file
-		fs.writeFile("output.html", data, (err) => {
-			if (err) {
-				console.error("Error writing to file:", err);
-			} else {
-				console.log("File has been written successfully!");
-			}
-		});
-	})
-	.catch((error) => {
-		console.error("Error downloading the document:", error);
-	});
+// 		// Write the replaced HTML to a file
+// 		fs.writeFile("output.html", data, (err) => {
+// 			if (err) {
+// 				console.error("Error writing to file:", err);
+// 			} else {
+// 				console.log("File has been written successfully!");
+// 			}
+// 		});
+// 	})
+// 	.catch((error) => {
+// 		console.error("Error downloading the document:", error);
+// 	});

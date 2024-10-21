@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import open from "open"; // Make sure to install this package
 
 const OAUTH_CLIENT_ID = process.env.OAUTH_CLIENT_ID;
 const OAUTH_CLIENT_SECRET = process.env.OAUTH_CLIENT_SECRET;
@@ -8,7 +9,7 @@ const SCOPES = ["https://www.googleapis.com/auth/gmail.send"];
 /**
  * Authenticate with Gmail API using OAuth2
  */
-async function authenticateGmail() {
+export async function authenticateGmail() {
 	const oAuth2Client = new google.auth.OAuth2(
 		OAUTH_CLIENT_ID,
 		OAUTH_CLIENT_SECRET,
@@ -22,12 +23,16 @@ async function authenticateGmail() {
 
 	console.log("Authorize this app by visiting this URL:", authUrl);
 
-	const code = "USER_AUTH_CODE"; // Replace this with user input for the auth code
+	// Automatically open the authorization URL in the default browser
+	await open(authUrl); // This opens the URL in the default web browser
+
+	// Prompt user for authorization code (this can be replaced with a better method)
+	const code = prompt("Enter the authorization code from that page here: "); // Replace this with your input method
 
 	const { tokens } = await oAuth2Client.getToken(code);
 	oAuth2Client.setCredentials(tokens);
 
-	return oAuth2Client;
+	return tokens;
 }
 
 /**
@@ -98,7 +103,7 @@ function createEmail({
 /**
  * Send the email
  */
-async function sendEmail({
+export async function sendEmail({
 	creds,
 	to,
 	cc,
@@ -136,23 +141,25 @@ async function sendEmail({
 	}
 }
 
-// Wrap the main logic in an async function
-(async () => {
-	try {
-		const creds = await authenticateGmail();
+// export default { authenticateGmail, sendEmail };
 
-		await sendEmail({
-			creds,
-			to: "phongunin@gmail.com",
-			cc: "", // Optional
-			bcc: "", // Optional
-			subject: "Test Email",
-			messageText: "This is a plain text email message",
-			htmlContent: "<h1>This is an HTML email message</h1>",
-			//   imagePath: "path/to/your/image.jpg", // Optional
-			//   filePath: "path/to/your/attachment.pdf", // Optional
-		});
-	} catch (error) {
-		console.error("Error:", error);
-	}
-})();
+// // Wrap the main logic in an async function
+// (async () => {
+// 	try {
+// 		const creds = await authenticateGmail();
+
+// 		await sendEmail({
+// 			creds,
+// 			to: "phongunin@gmail.com",
+// 			cc: "", // Optional
+// 			bcc: "", // Optional
+// 			subject: "Test Email",
+// 			messageText: "This is a plain text email message",
+// 			htmlContent: "<h1>This is an HTML email message</h1>",
+// 			//   imagePath: "path/to/your/image.jpg", // Optional
+// 			//   filePath: "path/to/your/attachment.pdf", // Optional
+// 		});
+// 	} catch (error) {
+// 		console.error("Error:", error);
+// 	}
+// })();

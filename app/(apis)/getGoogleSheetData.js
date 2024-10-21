@@ -15,7 +15,7 @@ async function getSheetData(googleSheetURL, range) {
 
 		const auth = new google.auth.GoogleAuth({
 			credentials: {
-				private_key: process.env.SA_PRIVATE_KEY.replace(/\\n/g, "\n"),
+				private_key: process.env.atob(SA_PRIVATE_KEY),
 				client_email: process.env.SA_CLIENT_EMAIL,
 			},
 			scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
@@ -66,9 +66,9 @@ async function findRowByPrimaryKey(sheetUrl, range, primaryKey) {
 
 module.exports = { getSheetData, findRowByPrimaryKey };
 
-getSheetData(
-	"https://docs.google.com/spreadsheets/d/1vaKcL1u4031p7CbywG6_Yg4mLDGyU4AY3rUWNErj05E/edit?usp=sharing",
-	"Sheet1"
-).then((data) => {
-	data.forEach((value) => console.log(value));
-});
+// getSheetData(
+// 	"https://docs.google.com/spreadsheets/d/1vaKcL1u4031p7CbywG6_Yg4mLDGyU4AY3rUWNErj05E/edit?usp=sharing",
+// 	"Sheet1"
+// ).then((data) => {
+// 	data.forEach((value) => console.log(value));
+// });
