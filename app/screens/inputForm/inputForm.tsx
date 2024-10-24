@@ -17,22 +17,62 @@ const InputForm: React.FC = () => {
 		console.log(range);
 
 		try {
-			const response = await fetch("/api/sendingMail", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ docUrl, sheetUrl, range }),
+			// First, initiate the auth flow
+
+			const authResponse = await fetch("/api/auth", {
+				method: "GET",
 			});
 
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
+			if (!authResponse.ok) {
+				throw new Error("Failed to initiate auth flow");
 			}
 
-			const data = await response.json();
-			console.log(data.message);
+			const { authUrl } = await authResponse.json();
+
+			// Open the auth URL in a new window
+
+			const authWindow = window.open(
+				authUrl,
+				"_blank",
+				"width=600,height=600"
+			);
+
+			// Poll to check if the auth window is closed
+
+			const checkAuthWindowClosed = setInterval(async () => {
+				if (authWindow?.closed) {
+					clearInterval(checkAuthWindowClosed);
+
+					// Auth window closed, now try to send the email
+
+					const emailResponse = await fetch(
+						"/api/sendingMail/route.js",
+						{
+							method: "POST",
+
+							headers: {
+								"Content-Type": "application/json",
+							},
+
+							body: JSON.stringify({ docUrl, sheetUrl, range }),
+						}
+					);
+
+					if (!emailResponse.ok) {
+						throw new Error("Failed to send email");
+					}
+
+					const result = await emailResponse.json();
+
+					console.log(result.message);
+
+					alert("Email sent successfully!");
+				}
+			}, 500);
 		} catch (error) {
-			console.error("Error during submission:", error);
+			console.error("Error:", error);
+
+			alert("An error occurred. Please try again.");
 		}
 	};
 
